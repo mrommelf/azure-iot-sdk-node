@@ -21,7 +21,7 @@ module.exports = function(hubConnectionString, protocols) {
       this.timeout(120000);
       var deviceClient;
       var deviceDescription = {
-          deviceId:  '0000e2etest-delete-me-node-device-method-' + uuid.v4(),
+          deviceId:  '',
           status: 'enabled',
             authentication: {
             symmetricKey: {
@@ -35,6 +35,7 @@ module.exports = function(hubConnectionString, protocols) {
       beforeEach(function (done) {
         this.timeout(20000);
 
+        deviceDescription.deviceId = '0000e2etest-delete-me-node-device-method-' + uuid.v4();
         var registry = Registry.fromConnectionString(hubConnectionString);
         registry.create(deviceDescription, function (err) {
           if (err) return done(err);
