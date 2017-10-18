@@ -51,9 +51,6 @@ export class Http extends Provisioning.StateMachine implements Provisioning.Tran
 
   _doFirstRegistrationRequestForFsm(registrationId: string, authorization: SharedAccessSignature | X509 | string, requestBody: any, forceRegistration: boolean, callback: (err?: Error, responseBody?: any, result?: any, pollingInterval?: number) => void): void {
 
-    debug('submitting PUT for ' + registrationId);
-    debug(JSON.stringify(requestBody));
-
     if ((authorization instanceof SharedAccessSignature) || (typeof authorization === 'string')) {
       this._restApiClient = new RestApiClient({ 'host' : this._config.serviceHostName , 'sharedAccessSignature' : authorization},  this._config.userAgent, this._httpBase);
     } else {
@@ -79,6 +76,8 @@ export class Http extends Provisioning.StateMachine implements Provisioning.Tran
     /* Codes_SRS_NODE_PROVISIONING_HTTP_18_012: [ If the registration response contains a body, `register` shall deserialize this into an object. ] */
     /* Codes_SRS_NODE_PROVISIONING_HTTP_18_013: [ If registration response body fails to deserialize, `register` will throw an `SyntaxError` error. ] */
     /* Codes_SRS_NODE_PROVISIONING_HTTP_18_014: [ If the registration response has a failed status code, `register` shall use `translateError` to translate this to a common error object and pass this into the `callback` function along with the deserialized body of the response. ] */
+    debug('submitting PUT for ' + registrationId + ' to ' + path);
+    debug(JSON.stringify(requestBody));
     this._restApiClient.executeApiCall('PUT', path, httpHeaders, requestBody, this._httpTimeout, (err: Error, responseBody?: any, result?: any) => {
       if (err) {
         debug('error executing PUT: ' + err.toString());
@@ -107,7 +106,7 @@ export class Http extends Provisioning.StateMachine implements Provisioning.Tran
     /* Codes_SRS_NODE_PROVISIONING_HTTP_18_024: [ `register` shall deserialize the body of the operation status response into an object. ] */
     /* Codes_SRS_NODE_PROVISIONING_HTTP_18_025: [ If the body of the operation status response fails to deserialize, `register` will throw a `SyntaxError` error. ] */
     /* Codes_SRS_NODE_PROVISIONING_HTTP_18_026: [ If the operation status response contains a failure status code, `register` shall stop polling and call the `callback` with an error created using `translateError`. ] */
-    debug('executing GET for operation status query');
+    debug('submitting status GET for ' + registrationId + ' to ' + path);
     this._restApiClient.executeApiCall('GET', path, httpHeaders, {}, this._httpTimeout, (err: Error, responseBody?: any, result?: any) => {
       if (err) {
         debug('error executing GET: ' + err.toString());
