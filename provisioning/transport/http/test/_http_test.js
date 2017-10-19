@@ -34,7 +34,7 @@ describe('Http', function () {
 
   beforeEach(function() {
     fakeTransportConfig.defaultPollingInterval = 1;
-  })
+  });
 
   describe('constructor', function() {
 
