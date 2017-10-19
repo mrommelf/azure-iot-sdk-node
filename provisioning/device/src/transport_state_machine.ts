@@ -18,7 +18,7 @@ export interface TransportHandlers {
   _getErrorFromResultForFsm(result: any): any;
 }
 
-export class StateMachine extends EventEmitter implements Provisioning.Transport, TransportHandlers{
+export class TransportStateMachine extends EventEmitter implements Provisioning.Transport, TransportHandlers{
   protected _apiVersion: string = '2017-08-31-preview';
   private _fsm: machina.Fsm;
   private _pollingTimer: any;
@@ -36,11 +36,9 @@ export class StateMachine extends EventEmitter implements Provisioning.Transport
             debug('entering disconnected state');
             this._pollingTimer = null;
             this._registrationCallback = null;
-            this._doDisconnectForFsm(() => {
-              if (callback) {
-                callback(err);
-              }
-            });
+            if (callback) {
+              callback(err);
+            }
           },
           connect: (callback) => {
             this._fsm.transition('connecting', callback);
@@ -48,7 +46,7 @@ export class StateMachine extends EventEmitter implements Provisioning.Transport
           register: (callback, registrationId, authorization, requestBody, forceRegistration) => {
             this._fsm.handle('connect', (err) => {
               if (err) {
-                this._fsm.transition('disconnected', callback, err);
+                this._fsm.transition('disconnecting', callback, err);
               } else {
                 this._fsm.transition('sendingRegistrationReqest', callback, registrationId, authorization, requestBody, forceRegistration);
               }
@@ -64,7 +62,7 @@ export class StateMachine extends EventEmitter implements Provisioning.Transport
             debug('entering connecting state');
             this._doConnectForFsm((err) => {
               if (err) {
-                this._fsm.transition('disconnected', callback, err);
+                this._fsm.transition('disconnecting', callback, err);
               } else {
                 this._fsm.transition('connected', callback);
               }
@@ -122,7 +120,7 @@ export class StateMachine extends EventEmitter implements Provisioning.Transport
             this._doOperationStatusQueryForFsm(registrationId, operationId, (err, result, body, pollingInterval) => {
               if (this._registrationInProgress()) { // make sure we weren't cancelled before doing something with the response
                 if (err) {
-                  this._fsm.transition('disconnected', callback, err);
+                  this._fsm.transition('disconnecting', callback, err);
                 } else {
                   this._handleOperationStatusResponse(registrationId, result, body, pollingInterval, callback);
                 }
@@ -133,14 +131,19 @@ export class StateMachine extends EventEmitter implements Provisioning.Transport
           '*': (callback) => callback(new errors.InvalidOperationError('another operation is in progress'))
         },
         disconnecting: {
-          _onEnter: (callback) => {
+          _onEnter: (callback, err) => {
             debug('entering disconnecting state');
-            this._cancelCurrentOperation((err) => {
+            this._cancelCurrentOperation((cancelErr) => {
               // log any errors, which are extremely unlikely, but continue disconnecting.
-              if (err) {
-                debug('error received from transport during disconnection:' + err.toString());
+              if (cancelErr) {
+                debug('error received from transport during disconnection (1):' + cancelErr.toString());
               }
-              this._doDisconnectForFsm(callback);
+              this._doDisconnectForFsm((disconnectErr) => {
+                if (disconnectErr) {
+                  debug('error received from transport during disconnection (2):' + cancelErr.toString());
+                }
+                this._fsm.transition('disconnected', callback, err);
+              });
             });
           },
           '*': () => this._fsm.deferUntilTransition()

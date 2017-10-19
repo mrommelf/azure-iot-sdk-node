@@ -14,7 +14,7 @@ const _defaultHeaders = {
   'Content-Type' : 'application/json; charset=utf-8'
 };
 
-export class Http extends Provisioning.StateMachine implements Provisioning.Transport {
+export class Http extends Provisioning.TransportStateMachine implements Provisioning.Transport {
   private _httpTimeout: number = 4000;
   private _restApiClient: RestApiClient;
   private _httpBase: Base;

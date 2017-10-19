@@ -4,7 +4,7 @@
 'use strict';
 
 var Interface = require('./lib/transport_interface');
-var Fsm = require('./lib/provisioning_fsm');
+var Fsm = require('./lib/transport_state_machine');
 
 /**
  * The `azure-device-provisioning-client` module provides access to the Azure Device Provisoning Service.
@@ -18,5 +18,5 @@ module.exports = {
   Config: Interface.Config,
   ResponseCallback: Interface.ResponseCallback,
   TransportHandlers: Fsm.TransportHandlers,
-  StateMachine: Fsm.StateMachine
+  TransportStateMachine: Fsm.TransportStateMachine
 };
