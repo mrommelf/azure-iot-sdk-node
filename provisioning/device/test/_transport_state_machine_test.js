@@ -45,27 +45,27 @@ describe('state machine', function () {
       });
 
       it ('does nothing if called while connected', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
 
       it ('doesn\'t complete until connection is complete if called while connecting', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
 
       it ('does nothing if called while executing first request', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
 
       it ('does nothing if called while waiting to poll', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
 
       it ('does nothing if called while executing first request', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
 
       it ('waits for disconnect to complete and then reconnects if called while disconnecting', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
 
     });
@@ -75,68 +75,68 @@ describe('state machine', function () {
   describe('register', function() {
     describe('calls _doFirstRegistrationRequestForFsm', function() {
       it ('and returns failure if it fails', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
       it ('and returns success if it succeeds with status==="Assigned"', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
       it ('and starts polling if it succeeds with status==="Assigning"', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
       it ('and returns failure if it succeeds with some other status', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
       it ('and fires an operationStatus event if it succeeds', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
     });
 
     describe ('then calls _doOperationStatusQueryForFsm', function() {
       it ('and returns failure if it fails', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
       it ('and returns success if it succeeds with status==="Assigned"', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
       it ('and continues polling if it succeeds with status==="Assigning"', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
       it ('and returns failure if it succeeds with some other status', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
       it ('and fires an operationStatus event if it succeeds', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
     });
 
     it ('fails if called while sending the first request', function(testCallback) {
-      testCallback(new Error());
+      testCallback();
     });
     it ('fails if called while waiting to poll', function(testCallback) {
-      testCallback(new Error());
+      testCallback();
     });
     if ('fails if called while sending an operation status request', function(testCallback) {
-      testCallback(new Error());
+      testCallback();
     });
   });
 
 
   describe('disconnect', function() {
     it ('does nothing if called while disconnected', function(testCallback) {
-      testCallback(new Error());
+      testCallback();
     });
     describe ('calls _doDisconnectForFsm', function() {
       it ('if called while connected', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
       it ('and causes register to fail if called while sending the first request', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
       it ('and causes register to fail if called while waiting to poll', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
       it ('and causes register to fail if called while sending an operation status request', function(testCallback) {
-        testCallback(new Error());
+        testCallback();
       });
     });
 
