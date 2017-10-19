@@ -120,7 +120,7 @@ export class TransportStateMachine extends EventEmitter implements Provisioning.
             this._doOperationStatusQueryForFsm(registrationId, operationId, (err, result, body, pollingInterval) => {
               if (this._registrationInProgress()) { // make sure we weren't cancelled before doing something with the response
                 if (err) {
-                  this._fsm.transition('disconnecting', callback, err);
+                  this._fsm.transition('connected', callback, err);
                 } else {
                   this._handleOperationStatusResponse(registrationId, result, body, pollingInterval, callback);
                 }
